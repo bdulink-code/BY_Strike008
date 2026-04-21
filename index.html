@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
+  <meta name="theme-color" content="#060c13" />
+  <title>BYStrike — Investor Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="app-shell">
+  <div class="phone-frame">
+    <div class="statusbar" id="statusbar">
+      <span>BYStrike / investor demo</span>
+      <span id="clock">12:00</span>
+    </div>
+
+    <main id="screen" class="screen menu-screen active">
+      <div class="menu-backdrop"></div>
+      <div class="menu-overlay"></div>
+      <div class="menu-content">
+        <div class="logo-block">
+          <div class="eyebrow">AR tactical shooter / pitch demo</div>
+          <h1 class="brand-title"><span>BY</span>STRIKE</h1>
+          <p class="brand-subtitle">Реальный мир. Настоящая игра. Открой матч, разреши камеру и покажи инвестору, как выглядит бой через телефон.</p>
+        </div>
+
+        <section class="menu-card">
+          <label class="label">Позывной</label>
+          <input id="callsignInput" class="input" value="GHOST_01" maxlength="16" />
+          <div class="button-row stack">
+            <button class="primary" id="hostBtn">Создать матч</button>
+            <button class="secondary" id="joinBtn">Войти в демо</button>
+          </div>
+          <div class="chip-row">
+            <span class="chip">Камера</span>
+            <span class="chip">HUD</span>
+            <span class="chip">Очередь</span>
+            <span class="chip">GitHub Pages</span>
+          </div>
+        </section>
+
+        <section class="feature-row">
+          <div class="feature-box">AR-режим</div>
+          <div class="feature-box">Реальные локации</div>
+          <div class="feature-box">Командный бой</div>
+          <div class="feature-box">Умное оружие</div>
+        </section>
+      </div>
+    </main>
+
+    <section id="lobbyScreen" class="screen lobby-screen hidden">
+      <div class="header-line">
+        <button class="ghost" data-back="menu">←</button>
+        <div>
+          <div class="section-kicker">Комната</div>
+          <h2>Лобби</h2>
+        </div>
+        <div class="room-code">7X3K</div>
+      </div>
+
+      <div class="card lobby-card">
+        <div class="lobby-topline">
+          <div>Код матча: <strong>7X3K</strong></div>
+          <div><span id="lobbyCount">8</span>/10 игроков</div>
+        </div>
+        <div class="players-list" id="playersList"></div>
+      </div>
+
+      <div class="card lobby-bottom">
+        <div class="chip-row">
+          <span class="chip">Режим: Командный бой</span>
+          <span class="chip">Карта: Живая камера</span>
+          <span class="chip">Эффекты: ВКЛ</span>
+        </div>
+        <button class="primary full" id="startMatchBtn">Стартовать матч</button>
+      </div>
+    </section>
+
+    <section id="countdownScreen" class="screen countdown-screen hidden">
+      <div class="countdown-backdrop"></div>
+      <div class="countdown-text" id="countdownText">3</div>
+      <div class="countdown-label" id="countdownLabel">Подготовка к запуску матча</div>
+    </section>
+
+    <section id="battleScreen" class="screen battle-screen hidden">
+      <video id="cameraFeed" class="camera-feed" autoplay playsinline muted></video>
+      <div class="battle-bg-fallback"></div>
+      <div class="camera-fallback hidden" id="cameraFallback">
+        <div class="fallback-card">
+          <h3>Камера не открылась</h3>
+          <p id="fallbackText">Разреши доступ к камере в браузере и открой страницу по HTTPS.</p>
+          <button class="primary" id="retryCameraBtn">Повторить запрос</button>
+        </div>
+      </div>
+
+      <div class="camera-mask"></div>
+      <div class="battle-vignette"></div>
+      <div class="scanlines"></div>
+      <div id="damageOverlay" class="damage-overlay"></div>
+      <div id="battleToast" class="battle-toast hidden"></div>
+      <div id="hitMarker" class="hit-marker">✦</div>
+
+      <div class="scoreboard">
+        <div class="score-team red-team">
+          <div class="score-label">КРАСНЫЕ</div>
+          <div class="score-number"><span id="redScore">32</span><small>/50</small></div>
+          <div class="score-sub">Всего убийств: <span id="redTotal">71</span></div>
+        </div>
+        <div class="score-center">
+          <div class="score-ring"><div class="score-time" id="timerValue">12:54</div></div>
+        </div>
+        <div class="score-team blue-team">
+          <div class="score-label">СИНИЕ</div>
+          <div class="score-number"><span id="blueScore">23</span><small>/50</small></div>
+          <div class="score-sub">Всего убийств: <span id="blueTotal">23</span></div>
+        </div>
+      </div>
+
+      <div class="hud-left">
+        <div class="minimap-panel">
+          <div class="mini-map" id="miniMap">
+            <div class="mini-player"></div>
+            <div class="mini-dot enemy" style="top:16%;left:68%"></div>
+            <div class="mini-dot enemy" style="top:30%;left:75%"></div>
+            <div class="mini-dot enemy" style="top:54%;left:86%"></div>
+            <div class="mini-dot ally" style="top:64%;left:26%"></div>
+            <div class="mini-dot ally" style="top:42%;left:30%"></div>
+          </div>
+        </div>
+
+        <div class="player-card">
+          <div class="portrait"></div>
+          <div class="player-bars">
+            <div class="bar-label">ЗДОРОВЬЕ <strong id="hpValue">240/240</strong></div>
+            <div class="bar hp-bar"><span id="hpBarFill"></span></div>
+            <div class="bar-label">БРОНЯ <strong>100/100</strong></div>
+            <div class="bar armor-bar"><span></span></div>
+            <div class="net-line">32ms</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hud-right">
+        <div class="killfeed">
+          <div class="feed-title">ЛЕНТА УБИЙСТВ</div>
+          <div id="feedItems" class="feed-items"></div>
+        </div>
+
+        <div class="control-stack">
+          <button class="action-round" id="reloadBtn"><span>ПЕРЕЗАРЯДКА</span></button>
+          <button class="action-round small-round" id="nextTargetBtn"><span>СМЕНИТЬ</span></button>
+          <button class="fire-round" id="fireSideBtn"><span>ОГОНЬ</span></button>
+        </div>
+
+        <div class="ammo-panel">
+          <div class="ammo-head">АВТО</div>
+          <div class="ammo-nums" id="ammoValue">18/120</div>
+          <div class="ammo-bars"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+        </div>
+      </div>
+
+      <div id="targetLayer" class="target-layer"></div>
+      <div id="fxLayer" class="fx-layer"></div>
+
+      <div class="crosshair-wrap">
+        <div id="lockRing" class="lock-ring"></div>
+        <div id="crosshair" class="crosshair neutral"><span></span><span></span><span></span><span></span></div>
+      </div>
+      <div id="lockText" class="lock-text">ПОИСК ЦЕЛИ</div>
+
+      <div id="weaponWrap" class="weapon-wrap">
+        <img src="weapon.png" alt="Оружие" class="weapon-image" />
+        <div id="muzzleFlash" class="muzzle-flash"></div>
+      </div>
+
+      <div class="bottom-actions">
+        <button class="small-btn" id="prevTargetBtn">◀ Цель</button>
+        <button class="small-btn" id="damageBtn">Получить урон</button>
+        <button class="small-btn" id="fullscreenBtn">Полный экран</button>
+        <button class="small-btn danger hold-fire" id="fireBtn">Удерживай для очереди</button>
+      </div>
+    </section>
+
+    <section id="resultsScreen" class="screen results-screen hidden">
+      <div class="results-backdrop"></div>
+      <div class="results-inner">
+        <div class="section-kicker">Матч завершён</div>
+        <h2>Победа</h2>
+        <div class="card results-card">
+          <div class="results-list" id="resultsList"></div>
+        </div>
+        <div class="button-row stack">
+          <button class="primary" id="restartBtn">Повторить демо</button>
+          <button class="secondary" id="backToMenuBtn">Вернуться в меню</button>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
